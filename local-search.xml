@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>化学中常用能量单位换算</title>
+    <link href="/2020/10/26/%E5%8C%96%E5%AD%A6%E4%B8%AD%E5%B8%B8%E7%94%A8%E8%83%BD%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8D%A2%E7%AE%97/"/>
+    <url>/2020/10/26/%E5%8C%96%E5%AD%A6%E4%B8%AD%E5%B8%B8%E7%94%A8%E8%83%BD%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8D%A2%E7%AE%97/</url>
+    
+    <content type="html"><![CDATA[<h1 id="量化常用单位和换算因子"><a href="#量化常用单位和换算因子" class="headerlink" title="量化常用单位和换算因子"></a>量化常用单位和换算因子</h1><h2 id="1-原子单位"><a href="#1-原子单位" class="headerlink" title="1. 原子单位"></a>1. 原子单位</h2><p>原子单位（a.u.）定义为：电子质量$m_e$=电子电荷$e$=Bohr半径$a_0 = 1$<br>在该单位制中，Planck常数$h=2\pi$，于是$\hbar = 1$。真空介电常数$1/4\pi\epsilon_0 = 1$。真空光速$c = \alpha^{-1} = 137.036$，其中$\alpha$为精细结构常数。</p><script>function calc(form, name){    var rate = [1, 2.997925E4, 1.986447E-5, 1.239842E-4, 4.556335E-6, 1.196266E-2, 2.85914E-3, 1.438769];    var index = 0;    for (var i = 0; i < rate.length; i++)    {        if (form.elements[i].name == name)        {            index = i;            break;        }    }    var thisValue = form.elements[index].value;    for (var i = 0; i < rate.length; i++)    {        form.elements[i].value = thisValue / rate[index] * rate[i];    }}</script><h2 id="2-常见能量单位转换计算器"><a href="#2-常见能量单位转换计算器" class="headerlink" title="2. 常见能量单位转换计算器"></a>2. 常见能量单位转换计算器</h2><form><input type="text" name="cm1" value=0 onChange="calc(this.form, this.name)"> cm<sup>-1 <br><input type="text" name="MHz" value=0 onChange="calc(this.form, this.name)"> MHz <br><input type="text" name="aJ" value=0 onChange="calc(this.form, this.name)"> aJ <br><input type="text" name="eV" value=0 onChange="calc(this.form, this.name)"> eV <br><input type="text" name="Hartree" value=0 onChange="calc(this.form, this.name)"> Hartree <br><input type="text" name="kJ/mol" value=0 onChange="calc(this.form, this.name)"> kJ/mol <br><input type="text" name="kcal/mol" value=0 onChange="calc(this.form, this.name)"> kcal/mol <br><input type="text" name="K" value=0 onChange="calc(this.form, this.name)"> K <br></form><h2 id="3-其他能量单位转换"><a href="#3-其他能量单位转换" class="headerlink" title="3. 其他能量单位转换"></a>3. 其他能量单位转换</h2><p>$$ 1 kcal/mol = 6.948 \times 10^{-14} erg  $$</p><p>$$ 1 eV = 1.602 \times 10^{-12} erg $$ </p><p>$$ 1 Hartree = 4.36 \times 10^{-11} erg = 2 Rydberg $$ </p><p>$$ 1 erg = 1.439 \times 10^{13} kcal/mol = 6.2415 \times 10^{11} eV = 2.2937 \times 10^{10} Hartree = 5.034 \times 10^{15} cm^{-1} $$</p><blockquote><p>ref: <a href="http://qchem.pw/data/units.html" target="_blank" rel="noopener">http://qchem.pw/data/units.html</a></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Research</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>干货！Matlab+AI打造高质量论文图片</title>
     <link href="/2020/10/15/%E5%B9%B2%E8%B4%A7%EF%BC%81Matlab-AI%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F%E8%AE%BA%E6%96%87%E5%9B%BE%E7%89%87/"/>
     <url>/2020/10/15/%E5%B9%B2%E8%B4%A7%EF%BC%81Matlab-AI%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F%E8%AE%BA%E6%96%87%E5%9B%BE%E7%89%87/</url>

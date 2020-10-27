@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>干货！Matlab+AI打造高质量论文图片 - Hexo</title>
+  <title>化学中常用能量单位换算 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -132,8 +132,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-10-15 11:13">
-                    2020年10月15日 上午
+                  <time datetime="2020-10-26 21:01">
+                    2020年10月26日 晚上
                   </time>
                 </div>
               
@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    300 字
+                    249 字
                   </span>
                 
 
@@ -153,7 +153,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    3
+                    4
                      分钟
                   </span>
                 
@@ -182,40 +182,65 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="如何生成高质量论文矢量图"><a href="#如何生成高质量论文矢量图" class="headerlink" title="如何生成高质量论文矢量图"></a>如何生成高质量论文矢量图</h2><h3 id="1-在Matlab中指定图片大小，字体大小，并导出为svg格式的矢量图"><a href="#1-在Matlab中指定图片大小，字体大小，并导出为svg格式的矢量图" class="headerlink" title="1. 在Matlab中指定图片大小，字体大小，并导出为svg格式的矢量图"></a>1. 在Matlab中指定图片大小，字体大小，并导出为<code>svg</code>格式的矢量图</h3><pre><code class="hljs matlab">x = <span class="hljs-built_in">linspace</span>(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>);
-y1 = <span class="hljs-built_in">sin</span>(x);
-y2 = <span class="hljs-built_in">cos</span>(x);
+              <h1 id="量化常用单位和换算因子"><a href="#量化常用单位和换算因子" class="headerlink" title="量化常用单位和换算因子"></a>量化常用单位和换算因子</h1><h2 id="1-原子单位"><a href="#1-原子单位" class="headerlink" title="1. 原子单位"></a>1. 原子单位</h2><p>原子单位（a.u.）定义为：电子质量$m_e$=电子电荷$e$=Bohr半径$a_0 = 1$<br>在该单位制中，Planck常数$h=2\pi$，于是$\hbar = 1$。真空介电常数$1/4\pi\epsilon_0 = 1$。真空光速$c = \alpha^{-1} = 137.036$，其中$\alpha$为精细结构常数。</p>
+<script>
+function calc(form, name)
+{
+    var rate = [1, 2.997925E4, 1.986447E-5, 1.239842E-4, 4.556335E-6, 1.196266E-2, 2.85914E-3, 1.438769];
+    var index = 0;
+    for (var i = 0; i < rate.length; i++)
+    {
+        if (form.elements[i].name == name)
+        {
+            index = i;
+            break;
+        }
+    }
+    var thisValue = form.elements[index].value;
+    for (var i = 0; i < rate.length; i++)
+    {
+        form.elements[i].value = thisValue / rate[index] * rate[i];
+    }
+}
+</script>
 
-<span class="hljs-comment">% 图片大小为 10cm X 8cm</span>
-fig = <span class="hljs-built_in">figure</span>(<span class="hljs-string">'Position'</span>, [<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">10</span>, <span class="hljs-number">8</span>], <span class="hljs-string">'Units'</span>, <span class="hljs-string">'centimeters'</span>); 
 
-<span class="hljs-built_in">plot</span>(x, y1, <span class="hljs-string">'DisplayName'</span>, <span class="hljs-string">'sin'</span>)
-<span class="hljs-built_in">hold</span> on
-<span class="hljs-built_in">plot</span>(x, y2, <span class="hljs-string">'DisplayName'</span>, <span class="hljs-string">'cos'</span>)
+<h2 id="2-常见能量单位转换计算器"><a href="#2-常见能量单位转换计算器" class="headerlink" title="2. 常见能量单位转换计算器"></a>2. 常见能量单位转换计算器</h2><form>
+<input type="text" name="cm1" value=0 onChange="calc(this.form, this.name)"> cm<sup>-1 <br>
+<input type="text" name="MHz" value=0 onChange="calc(this.form, this.name)"> MHz <br>
+<input type="text" name="aJ" value=0 onChange="calc(this.form, this.name)"> aJ <br>
+<input type="text" name="eV" value=0 onChange="calc(this.form, this.name)"> eV <br>
+<input type="text" name="Hartree" value=0 onChange="calc(this.form, this.name)"> Hartree <br>
+<input type="text" name="kJ/mol" value=0 onChange="calc(this.form, this.name)"> kJ/mol <br>
+<input type="text" name="kcal/mol" value=0 onChange="calc(this.form, this.name)"> kcal/mol <br>
+<input type="text" name="K" value=0 onChange="calc(this.form, this.name)"> K <br>
+</form>
 
-ylim([<span class="hljs-number">0</span>, <span class="hljs-number">1.5</span>])
-<span class="hljs-built_in">legend</span>(<span class="hljs-string">'Location'</span>, <span class="hljs-string">'north'</span>);
-
-print(fig, <span class="hljs-string">'sincos.svg'</span>, <span class="hljs-string">'-r300'</span>, <span class="hljs-string">'-dsvg'</span>); <span class="hljs-comment">% 输出为 svg 格式</span></code></pre>
-<p><img src="/images/sincos.svg" srcset="/img/loading.gif" alt=""></p>
-<h3 id="2-打开AI-Adobe-illustrator-，新建，设置图纸大小（16cm-X-10cm）"><a href="#2-打开AI-Adobe-illustrator-，新建，设置图纸大小（16cm-X-10cm）" class="headerlink" title="2. 打开AI (Adobe illustrator)，新建，设置图纸大小（16cm X 10cm）"></a>2. 打开AI (Adobe illustrator)，新建，设置图纸大小（16cm X 10cm）</h3><h3 id="3-插入Matlab导出的svg文件（文件-gt-置入，快捷键为Ctrl-Shift-P）"><a href="#3-插入Matlab导出的svg文件（文件-gt-置入，快捷键为Ctrl-Shift-P）" class="headerlink" title="3. 插入Matlab导出的svg文件（文件-&gt;置入，快捷键为Ctrl+Shift+P）"></a>3. 插入Matlab导出的<code>svg</code>文件（<code>文件</code>-&gt;<code>置入</code>，快捷键为<code>Ctrl+Shift+P</code>）</h3><h3 id="4-调整图片大小"><a href="#4-调整图片大小" class="headerlink" title="4. 调整图片大小"></a>4. 调整图片大小</h3><p>   插入到AI中的图片可能会很大，这时就要对图片进行缩放，可以用鼠标进行缩放，如果要保证横纵缩放比例一致，需要按住<code>Shift</code>键。用鼠标缩放可能会导致字体大小不一致，这时需要输入具体数值改变图片大小，输入的数值需要与Matlab中设定的图片大小一致，可能缩放过后线条的粗细没变，这时需要设置<code>缩放描边和效果</code></p>
-<p>   <img src="/images/matlabAI1.png" srcset="/img/loading.gif" alt=""></p>
-<p>   <img src="/images/matlabAI2.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="5-从AI中输出高质量矢量图"><a href="#5-从AI中输出高质量矢量图" class="headerlink" title="5. 从AI中输出高质量矢量图"></a>5. 从AI中输出高质量矢量图</h3><p>文件-&gt;存储为，可以保存为<code>pdf</code>或<code>eps</code>等矢量图格式</p>
-<p><img src="/images/sincos_AI.svg" srcset="/img/loading.gif" alt=""></p>
+<h2 id="3-其他能量单位转换"><a href="#3-其他能量单位转换" class="headerlink" title="3. 其他能量单位转换"></a>3. 其他能量单位转换</h2><p>$$ 1 kcal/mol = 6.948 \times 10^{-14} erg  $$</p>
+<p>$$ 1 eV = 1.602 \times 10^{-12} erg $$ </p>
+<p>$$ 1 Hartree = 4.36 \times 10^{-11} erg = 2 Rydberg $$ </p>
+<p>$$ 1 erg = 1.439 \times 10^{13} kcal/mol = 6.2415 \times 10^{11} eV = 2.2937 \times 10^{10} Hartree = 5.034 \times 10^{15} cm^{-1} $$</p>
+<blockquote>
+<p>ref: <a href="http://qchem.pw/data/units.html" target="_blank" rel="noopener">http://qchem.pw/data/units.html</a></p>
+</blockquote>
 
             </article>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Matlab/">Matlab</a>
-                    
-                      <a class="hover-with-bg" href="/tags/AI/">AI</a>
+                      <a class="hover-with-bg" href="/tags/Research/">Research</a>
                     
                   </div>
                 
@@ -226,18 +251,12 @@ print(fig, <span class="hljs-string">'sincos.svg'</span>, <span class="hljs-stri
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/26/%E5%8C%96%E5%AD%A6%E4%B8%AD%E5%B8%B8%E7%94%A8%E8%83%BD%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8D%A2%E7%AE%97/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">化学中常用能量单位换算</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/07/18/Eigen%E4%B8%8EMatlab%E6%93%8D%E4%BD%9C%E5%AF%B9%E7%85%A7/">
-                        <span class="hidden-mobile">Eigen与Matlab操作对照</span>
+                      <a href="/2020/10/15/%E5%B9%B2%E8%B4%A7%EF%BC%81Matlab-AI%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F%E8%AE%BA%E6%96%87%E5%9B%BE%E7%89%87/">
+                        <span class="hidden-mobile">干货！Matlab+AI打造高质量论文图片</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -454,7 +473,7 @@ print(fig, <span class="hljs-string">'sincos.svg'</span>, <span class="hljs-stri
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "干货！Matlab+AI打造高质量论文图片&nbsp;",
+        "化学中常用能量单位换算&nbsp;",
       ],
       cursorChar: "😘",
       typeSpeed: 50,
