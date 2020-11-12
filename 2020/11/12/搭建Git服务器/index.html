@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>工具网站汇总 - Hexo</title>
+  <title>搭建Git服务器 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -132,8 +132,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-05-19 21:00">
-                    2020年5月19日 晚上
+                  <time datetime="2020-11-12 08:44">
+                    2020年11月12日 早上
                   </time>
                 </div>
               
@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    8 字
+                    361 字
                   </span>
                 
 
@@ -153,7 +153,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    1
+                    4
                      分钟
                   </span>
                 
@@ -182,9 +182,38 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <ul>
-<li><a href="http://tinyambition.com/h2m/" target="_blank" rel="noopener">HTML转Markdown</a></li>
-<li><a href="https://pandao.github.io/editor.md/" target="_blank" rel="noopener">在线Markdown编辑器</a></li>
+              <h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p><a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a>是一种版本控制的开源软件，由Linux之父Linus开发的。它是一种分布式版本控制系统，不需要服务器软件就可以进行版本控制，这使得源代码的发布以及多人协作时交流十分便捷，Git软件普遍预装在Linux各个发行版中，查看系统中的Git版本号：</p>
+<pre><code class="hljs bash">$ git --version
+git version 1.7.1</code></pre>
+
+<h2 id="搭建远程Git服务器"><a href="#搭建远程Git服务器" class="headerlink" title="搭建远程Git服务器"></a>搭建远程Git服务器</h2><p>搭建远程Git服务器的要求很低，只需要本地机器能通过ssh访问远程服务器</p>
+<p>创建过程特别简单，首先在<strong>远程服务器</strong>中：</p>
+<pre><code class="hljs bash">$ mkdir -p ~/gitServer/repo <span class="hljs-comment"># 创建一个目录来作为代码仓库</span>
+$ <span class="hljs-built_in">cd</span> ~/gitServer/repo
+$ git init --bare test.git <span class="hljs-comment"># 创建一个空的git仓库，仓库名称为test</span>
+Initialized empty Git repository <span class="hljs-keyword">in</span> ~/gitServer/repo/test.git/</code></pre>
+
+<p>至此远程Git服务器搭建<strong>完成</strong></p>
+<h2 id="在本地机器上进行源代码管理"><a href="#在本地机器上进行源代码管理" class="headerlink" title="在本地机器上进行源代码管理"></a>在本地机器上进行源代码管理</h2><ul>
+<li><p>首先，在本地<code>clone</code>远程仓库：</p>
+<pre><code class="hljs bash">$ mkdir user1
+$ <span class="hljs-built_in">cd</span> user1
+$ git <span class="hljs-built_in">clone</span> serverUser@222.22.123.45:~/gitServer/repo/test.git  <span class="hljs-comment"># clone远程仓库到本地</span>
+Cloning into <span class="hljs-string">'test'</span>...
+warning: You appear to have cloned an empty repository.
+$ <span class="hljs-built_in">cd</span> <span class="hljs-built_in">test</span>
+$ ls -a <span class="hljs-comment"># 会有一个.git的隐藏文件夹</span>
+.  ..  .git</code></pre>
+</li>
+<li><p>推送本地代码到远程服务器</p>
+<pre><code class="hljs bash">$ touch readme.md <span class="hljs-comment"># 创建一个文件</span>
+$ git add . <span class="hljs-comment"># 添加要推送的文件</span>
+$ git commit -m <span class="hljs-string">"First push"</span> <span class="hljs-comment"># 添加推送信息</span>
+$ git push <span class="hljs-comment"># 推送文件到远程服务器</span></code></pre>
+</li>
+<li><p>从远程服务器拉取文件</p>
+<pre><code class="hljs bash">$ git pull</code></pre>
+</li>
 </ul>
 
             </article>
@@ -192,11 +221,18 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Tools/">Tools</a>
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
                     
                   </div>
                 
@@ -207,18 +243,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">VMD原子选区语法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/05/19/Python%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BD%BF%E7%94%A8/">
-                        <span class="hidden-mobile">Python线程池的创建和使用</span>
+                      <a href="/2020/10/26/%E5%8C%96%E5%AD%A6%E4%B8%AD%E5%B8%B8%E7%94%A8%E8%83%BD%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8D%A2%E7%AE%97/">
+                        <span class="hidden-mobile">化学中常用能量单位换算</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -435,7 +465,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "工具网站汇总&nbsp;",
+        "搭建Git服务器&nbsp;",
       ],
       cursorChar: "😘",
       typeSpeed: 50,
