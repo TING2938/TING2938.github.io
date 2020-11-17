@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Linux常用命令（持续更新...）</title>
+    <link href="/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/"/>
+    <url>/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/</url>
+    
+    <content type="html"><![CDATA[<h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><ul><li><code>find . -type f -size +1G</code><ul><li>查找大于1G的所有文件（或+10M，为大于10M的文件）</li></ul></li></ul><h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><ul><li><code>grep -v cpp$</code><ul><li><code>-v</code> 代表反向选取，即选择不以<code>cpp</code>结尾的行</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>搭建Git服务器</title>
     <link href="/2020/11/12/%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <url>/2020/11/12/%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
