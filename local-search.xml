@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>Linux常用命令（持续更新...）</title>
+    <title>Linux常用命令（持续更新中...）</title>
     <link href="/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/"/>
     <url>/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/</url>
     
-    <content type="html"><![CDATA[<h2 id="find"><a href="#find" class="headerlink" title="find"></a><code>find</code></h2><ul><li><code>find . -type f -size +1G</code><ul><li>查找大于1G的所有文件（或+10M，为大于10M的文件）</li></ul></li></ul><h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a><code>grep</code></h2><ul><li><code>grep -v cpp$</code><ul><li><code>-v</code> 代表反向选取，即选择不以<code>cpp</code>结尾的行 </li></ul></li></ul><h2 id="du"><a href="#du" class="headerlink" title="du"></a><code>du</code></h2><p><code>du</code>统计文件以及文件夹大小</p><ul><li><code>du -sh</code><ul><li>统计当前文件占用大小</li></ul></li><li><code>du -d 1 -h</code><ul><li><code>-d 1</code> 代表统计文件夹深度为1</li></ul></li></ul>]]></content>
+    <content type="html"><![CDATA[<h2 id="find"><a href="#find" class="headerlink" title="find"></a><code>find</code></h2><ul><li><code>find . -type f -size +1G</code><ul><li>查找大于1G的所有文件（或+10M，为大于10M的文件）</li></ul></li></ul><h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a><code>grep</code></h2><ul><li><code>grep -v cpp$</code><ul><li><code>-v</code> 代表反向选取，即选择不以<code>cpp</code>结尾的行 </li></ul></li><li><code>echo &quot;Modify: 2020-11-24 11:09:22.584500109 +0800&quot; | grep -oP &quot;\d{4}-\d{2}-\d{2}&quot;</code><ul><li>输出：2020-11-24</li><li><code>-o</code>代表只输出匹配的部分</li></ul></li></ul><h2 id="du"><a href="#du" class="headerlink" title="du"></a><code>du</code></h2><p><code>du</code>统计文件以及文件夹大小</p><ul><li><code>du -sh</code><ul><li>统计当前文件占用大小</li></ul></li><li><code>du -d 1 -h</code><ul><li><code>-d 1</code> 代表统计文件夹深度为1</li></ul></li></ul>]]></content>
     
     
     <categories>
