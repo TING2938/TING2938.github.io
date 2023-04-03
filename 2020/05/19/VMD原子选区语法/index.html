@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="叶挺">
+  <meta name="keywords" content="TING2938">
+  
+    <meta name="description" content="VMD里原子选择语句的语法和例子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VMD原子选区语法">
+<meta property="og:url" content="https://ting2938.github.io/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="小礼札记">
+<meta property="og:description" content="VMD里原子选择语句的语法和例子">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ting2938.github.io/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/2023-04-03-21-19-43.png">
+<meta property="og:image" content="https://ting2938.github.io/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/2023-04-03-21-19-24.png">
+<meta property="article:published_time" content="2020-05-19T13:30:58.000Z">
+<meta property="article:modified_time" content="2023-04-03T13:19:46.331Z">
+<meta property="article:author" content="叶挺">
+<meta property="article:tag" content="VMD">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ting2938.github.io/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/2023-04-03-21-19-43.png">
+  
+  
+  
+  <title>VMD原子选区语法 - 小礼札记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ting2938.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"a42297b398451c11cf9852c2dfa19253","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>挺的记事簿</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="VMD原子选区语法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-19 21:30" pubdate>
+          2020年5月19日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">VMD原子选区语法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h2><p>VMD（<a target="_blank" rel="noopener" href="http://www.ks.uiuc.edu/Research/vmd/">http://www.ks.uiuc.edu/Research/vmd/</a>）是极其强大、灵活的化学体系可视化程序，笔者之前也写过不少相关文章，见<a target="_blank" rel="noopener" href="http://sobereva.com/category/VMD/">http://sobereva.com/category/VMD/</a>。VMD的选择语句(selection)用来选择满足特定要求的体系中的原子，其用法极度简单灵活，对于VMD的使用至关重要。</p>
+<p>选择语句在VMD里用的地方非常多，无处不在。比如如果想在图形窗口只显示指定的区域，那么可以在Graphics - Representation里在selected atoms的地方写上选择语句。如果想把指定的区域保存成新文件，那么可以在File - Save coordinates里在Selected atoms写上选择语句。很多自带的插件也需要选择语句，比如VMD自带的径向分布函数计算插件，里面selection 1、selection 2就是让你输入选择语句的地方。在VMD里还可以用atomselect命令创建对象，显然也要输入选择语句。顺带一提，如今GROMACS里也可以用selections语句，和VMD很大程度一致，但不完全一致。</p>
+<p>鉴于经常有人问选择语句怎么用，每次回复很麻烦，笔者遂专门写个小文说一下。这些内容在“北京科音分子动力学与GROMACS培训班里”（<a target="_blank" rel="noopener" href="http://www.keinsci.com/workshop/KGMX_content.html">http://www.keinsci.com/workshop/KGMX_content.html</a>）里大多也都讲过，之前的学员可以复习一下。本文内容对应VMD 1.9.3。下文从简单到复杂进行讲解。</p>
+<h2 id="2-单关键词（Singleword）"><a href="#2-单关键词（Singleword）" class="headerlink" title="2 单关键词（Singleword）"></a><strong>2 单关键词（Singleword）</strong></h2><p>有一些关键词可以直接选择特定原子，以下举例一部分：</p>
+<p> all：所有原子</p>
+<p> none：不选择任何原子</p>
+<p> noh：氢以外的原子（即重原子）</p>
+<p> ion：离子</p>
+<p> water：水</p>
+<p> backbone：生物大分子骨架</p>
+<p> sidechain：生物大分子侧链</p>
+<p> protein：蛋白</p>
+<p> nucleic：核酸</p>
+<p> helix：螺旋</p>
+<p> alpha_helix：alpha螺旋（是helix中的子集，较长一段螺旋才算）</p>
+<p> sheet：折叠</p>
+<p> turn：转角</p>
+<p> coil：盘绕</p>
+<p> alpha：蛋白质的alpha碳</p>
+<p> acidic：PH&#x3D;7时带负电氨基酸</p>
+<p> basic：PH&#x3D;7时带正电氨基酸</p>
+<p> charged：acidic和basic的并集</p>
+<p> neutral：电中性氨基酸</p>
+<p> polar：极性残基</p>
+<p> hydrophobic：疏水性残基</p>
+<p> bonded：成键的原子</p>
+<p> hetero：非蛋白质和核酸的部分</p>
+<p> carbon、hydrogen、oxygen、nitrogen、sulfur：相应元素。对于其它元素没法这么输入元素名来选择</p>
+<p>这些单关键词实际上可以在Representation界面里的Selections标签页里的Singlewords直接看到，可见可以用的单关键词远不止上述这些。有些单关键词其实是复合选择语句，比如你选中hetero，就会看到其定义其实是not (protein or nucleic)。</p>
+<p><img src="/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/2023-04-03-21-19-43.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意有些情况下，单关键词未必能如实选择相应的区域。比如你载入的结构里有水，如果输入文件里水的残基名很特殊，比如叫FFF，那么VMD就不会把这个残基识别成水分子，用water关键词的时候也没法选中这些水。</p>
+<h2 id="3-一般关键词"><a href="#3-一般关键词" class="headerlink" title="3 一般关键词"></a><strong>3 一般关键词</strong></h2><p>用下面这些关键词可以通过属性选取原子，都是后面要接参数的</p>
+<p> name：原子名。例：name OW选择原子名叫OW的原子</p>
+<p> index：原子序号（从0开始！）。例：index 4</p>
+<p> serial：原子序号（从1开始）</p>
+<p> type：原子类型。例：type CA选择CA原则类型</p>
+<p> element：元素名。例：element P选择磷原子</p>
+<p> resname：残基名。例：resname ALA代表选择丙氨酸</p>
+<p> residue：残基编号，从0开始。例resid 372代表选择372号残基</p>
+<p> resid：残基编号，从1开始。若结构文件里有残基号则与之一致</p>
+<p> chain：链名。例：chain B代表选择B链</p>
+<p> fragment：片段编号。VMD对每个键连的片段自动设定一个编号。例：fragment 4代表选择片段4</p>
+<p> numbonds：成键数目。例：numbonds&#x3D;2或numbonds 2代表选形成了两个键的原子</p>
+<p> structure：二级结构。例：structure H代表选择螺旋(helix)区域</p>
+<p> x,y,z：X&#x2F;Y&#x2F;Z笛卡尔坐标</p>
+<p> vx,vy,vz：X&#x2F;Y&#x2F;Z方向速度</p>
+<p> beta：pdb文件中的beta值</p>
+<p> occupancy：pdb文件中的原子占有率</p>
+<p> mass：原子质量</p>
+<p> charge：原子电荷</p>
+<p> phi、psi：蛋白质骨架角度</p>
+<p> radius：原子半径</p>
+<p>…等等</p>
+<p>每个属性后面能接什么值，在Selections标签页里都能看到，不确定的话看一眼便知：</p>
+<p><img src="/2020/05/19/VMD%E5%8E%9F%E5%AD%90%E9%80%89%E5%8C%BA%E8%AF%AD%E6%B3%95/2023-04-03-21-19-24.png" srcset="/img/loading.gif" lazyload></p>
+<p>许多属性并非对于任何输入文件都能用。比如：</p>
+<p>·使用charge属性，必须输入的文件里体现了原子电荷才行，比如可以用mol2或pqr，后者详见《使用Multiwfn+VMD以原子着色方式表现原子电荷、自旋布居、电荷转移、简缩福井函数》（<a target="_blank" rel="noopener" href="http://sobereva.com/425">http://sobereva.com/425</a>）。</p>
+<p>·使用beta属性，通常需要用pdb文件作为输入，因为里面专门有一列记录B因子信息。</p>
+<p>·用type的话必须载入拓扑文件才行。</p>
+<p>·用vx、vy、vz的话，对于GROMACS用户，参看《使VMD读入Gromacs产生的trr轨迹中速度信息的方法》（<a target="_blank" rel="noopener" href="http://sobereva.com/117">http://sobereva.com/117</a>）。</p>
+<p>·element信息是很多文件里没有的，比如GROMACS的.gro文件里就没体现</p>
+<h2 id="4-选择语句中可利用的规则"><a href="#4-选择语句中可利用的规则" class="headerlink" title="4 选择语句中可利用的规则"></a><strong>4 选择语句中可利用的规则</strong></h2><p>在选择语句中有以下规则可以利用，通过组合、嵌套，使得选择语句无比强大</p>
+<p>·可以写多个参数一次选择一批，彼此间用空格分隔</p>
+<p>·可以用… to …选择特定范围</p>
+<p>·可以用与、或、非这些逻辑关系：and、or、not</p>
+<p>·可以用( )或{ }指定语句处理的优先顺序</p>
+<p>·双引号内的字符会被视为整体，并且可以使用正则表达式</p>
+<p>·用单引号扩住则里面的字符可以避免被转义</p>
+<p>·可以用判断语句：&lt;, &lt;&#x3D;, &#x3D;, &gt;&#x3D;, &gt;, !&#x3D;</p>
+<p>·可以用函数：sqr（平方）, sqrt（开根号）, abs（绝对值）, sin, cos, tan, atan, asin, acos, sinh, cosh, tanh, exp, log, log10</p>
+<p>·支持运算符：+ - * &#x2F;。可以用^或**来表示多少次方</p>
+<p>·特殊选择方式：</p>
+<p> within 5 of AAA：距离AAA 5埃以内的原子。选取时不考虑周期边界条件，用pbwithin则考虑</p>
+<p> exwithin 5 of AAA ：同上，但不包含AAA自身</p>
+<p> withinbonds 2 of AAA：距离AAA不超过两个键的原子</p>
+<p> same p as AAA：与AAA选区的p属性相同的部分</p>
+<p> ringsize 5 from AAA：处于AAA中五元环上的原子</p>
+<p> maxringsize 6 from AAA：处于AAA中&lt;&#x3D;六元环的原子</p>
+<p>下面来看一些具体例子</p>
+<p> index 5 to 200 210：序号在5~200内的原子以及210号原子</p>
+<p> protein or nucleic：蛋白质与核酸的原子</p>
+<p> resname ALA CYS ARG：丙氨酸、半胱氨酸、精氨酸原子</p>
+<p> backbone not helix：除了螺旋区域以外的骨架原子</p>
+<p> name CA CB 或 name “CA|CB” 或 name “C[AB]” 或 name “C(A|B)”：名为CA和CB的原子</p>
+<p> name “C.”：名字为两个字符且第一个字符为C的原子</p>
+<p> name “CE[1-3]”：名字为CE1、CE2、CE3的原子</p>
+<p> name ‘O5*’：叫O5*的原子。注意原子名带星号的在选取时要用单引号括住以免转义</p>
+<p> resname ‘CA2+’：残基名是CA2+的原子（二价钙离子）。名字带正负号的也要用单引号括住以免转义</p>
+<p> mass &gt; 5：质量大于5的原子</p>
+<p> abs(charge)&gt;1：电荷大小超过1的原子</p>
+<p> x&lt;6 and x&gt;3：选择x在3~6埃区域内的一层原子</p>
+<p> x&gt;1 and x&lt;8 and y&gt;24 and y&lt;35 and z&gt;1 and z&lt;5：一个矩形区域内的原子</p>
+<p> sqr(x-5)+sqr(y+4)+sqr(z) &lt; sqr(5) ：以(5,-4,0)点为中心半径5埃以内的原子</p>
+<p> ((x-33)^2+(y-14.5)^2)&lt;12^2 and z&lt;40 and z&gt;10：选择以x&#x3D;33、y&#x3D;14.5埃为中心，半径为12埃，z范围在10~40埃的柱形区域</p>
+<p> x+y+z&lt;80：斜切面内侧的原子（回忆平面方程）</p>
+<p> not {oxygen and numbonds&#x3D;0}：扣除孤立的氧原子（可以用于去除X光衍射pdb文件里的结晶水）</p>
+<p> within 6 of protein：距离蛋白质6埃以内的原子</p>
+<p> not within 5 of resname ADP：距离名为ADP的分子5埃以外的原子</p>
+<p> water within 5 of residue 8 to 44：距离8~44号残基5埃以内的水</p>
+<p> withinbonds 2 of index 31：距离编号为31原子的两个键及以内的原子</p>
+<p> maxringsize 6 from protein：蛋白当中所有六元及六元以下环上的原子</p>
+<p> same resname as resid 33：所有与33号残基相同名称的残基</p>
+<p> same residue as {protein within 5 of nucleic}：与核酸的原子相距5埃以内的蛋白的原子，并且把被截断的残基保留完整</p>
+<p> x &gt; 15 and not same fragment as {exwithin 8 of protein}：蛋白质以及蛋白质8埃范围以外的原子，保留完整片段，同时x坐标得大于15埃</p>
+<p>以上例子中，涉及到坐标、速度变量的，属于动态选区，即随着帧号变化被选择的原子会可能发生变化。观看这些选区的时候，注意在Representation界面的Trajectory标签页里要把Update Selection Every Frame选上，否则选中的原子是对刚选中时那一帧而言的，不会随着轨迹播放被动态更新。在一些VMD的插件中，比如计算rdf的Radial Pair Distribution Function g(r)插件里，当Selection文本框里用了动态选区时，应当把Update Selections复选框选上，否则也由于不会被动态更新而和期望的不符。</p>
+<blockquote>
+<p>转自 <a target="_blank" rel="noopener" href="http://bbs.keinsci.com/thread-14267-1-1.html">http://bbs.keinsci.com/thread-14267-1-1.html</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research/" class="category-chain-item">Research</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/VMD/">#VMD</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>VMD原子选区语法</div>
+      <div>https://ting2938.github.io/2020/05/19/VMD原子选区语法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>叶挺</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/05/19/C-%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AE%BE%E7%BD%AE%E6%BB%9A%E5%8A%A8%E8%BE%93%E5%87%BA/" title="C++控制台设置滚动输出">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++控制台设置滚动输出</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/19/%E5%B7%A5%E5%85%B7%E7%BD%91%E7%AB%99%E6%B1%87%E6%80%BB/" title="工具网站汇总">
+                        <span class="hidden-mobile">工具网站汇总</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"MfqMCE7bV2FERa8qRoCPLY2f-gzGzoHsz","appKey":"DtsHTEOjSeUmVFcPEUnoyEqR","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

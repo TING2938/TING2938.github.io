@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="叶挺">
+  <meta name="keywords" content="TING2938">
+  
+    <meta name="description" content="Python线程池 ThreadPoolExecutor 的用法及实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python线程池的创建和使用">
+<meta property="og:url" content="https://ting2938.github.io/2020/05/19/Python%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="小礼札记">
+<meta property="og:description" content="Python线程池 ThreadPoolExecutor 的用法及实战">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/6/6/16b2cf5c38d862ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/6/6/16b2cf5c38438238?imageslim">
+<meta property="article:published_time" content="2020-05-19T00:25:07.000Z">
+<meta property="article:modified_time" content="2020-05-22T06:57:16.000Z">
+<meta property="article:author" content="叶挺">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2019/6/6/16b2cf5c38d862ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+  
+  
+  
+  <title>Python线程池的创建和使用 - 小礼札记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ting2938.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"a42297b398451c11cf9852c2dfa19253","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>挺的记事簿</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python线程池的创建和使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-19 08:25" pubdate>
+          2020年5月19日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python线程池的创建和使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="✨-前言"><a href="#✨-前言" class="headerlink" title="✨ 前言"></a>✨ 前言</h3><p>从Python3.2开始，标准库为我们提供了 concurrent.futures 模块，它提供了 ThreadPoolExecutor (线程池)和ProcessPoolExecutor (进程池)两个类。</p>
+<p>相比 threading 等模块，该模块通过 submit 返回的是一个 future 对象，它是一个未来可期的对象，通过它可以获悉线程的状态主线程(或进程)中可以获取某一个线程(进程)执行的状态或者某一个任务执行的状态及返回值：</p>
+<ol>
+<li>主线程可以获取某一个线程（或者任务的）的状态，以及返回值。</li>
+<li>当一个线程完成的时候，主线程能够立即知道。</li>
+<li>让多线程和多进程的编码接口一致。</li>
+</ol>
+<h3 id="✨-线程池的基本使用"><a href="#✨-线程池的基本使用" class="headerlink" title="✨ 线程池的基本使用"></a>✨ 线程池的基本使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># coding: utf-8</span><br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">spider</span>(<span class="hljs-params">page</span>):<br>    time.sleep(page)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;crawl task<span class="hljs-subst">&#123;page&#125;</span> finished&quot;</span>)<br>    <span class="hljs-keyword">return</span> page<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>) <span class="hljs-keyword">as</span> t:  <span class="hljs-comment"># 创建一个最大容纳数量为5的线程池</span><br>    task1 = t.submit(spider, <span class="hljs-number">1</span>)<br>    task2 = t.submit(spider, <span class="hljs-number">2</span>)  <span class="hljs-comment"># 通过submit提交执行的函数到线程池中</span><br>    task3 = t.submit(spider, <span class="hljs-number">3</span>)<br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task1: <span class="hljs-subst">&#123;task1.done()&#125;</span>&quot;</span>)  <span class="hljs-comment"># 通过done来判断线程是否完成</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task2: <span class="hljs-subst">&#123;task2.done()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task3: <span class="hljs-subst">&#123;task3.done()&#125;</span>&quot;</span>)<br><br>    time.sleep(<span class="hljs-number">2.5</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task1: <span class="hljs-subst">&#123;task1.done()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task2: <span class="hljs-subst">&#123;task2.done()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;task3: <span class="hljs-subst">&#123;task3.done()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(task1.result())  <span class="hljs-comment"># 通过result来获取返回值</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="执行结果如下"><a href="#执行结果如下" class="headerlink" title="执行结果如下:"></a>执行结果如下:</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">task1:</span> <span class="hljs-literal">False</span><br><span class="hljs-attr">task2:</span> <span class="hljs-literal">False</span><br><span class="hljs-attr">task3:</span> <span class="hljs-literal">False</span><br><span class="hljs-string">crawl</span> <span class="hljs-string">task1</span> <span class="hljs-string">finished</span><br><span class="hljs-string">crawl</span> <span class="hljs-string">task2</span> <span class="hljs-string">finished</span><br><span class="hljs-attr">task1:</span> <span class="hljs-literal">True</span><br><span class="hljs-attr">task2:</span> <span class="hljs-literal">True</span><br><span class="hljs-attr">task3:</span> <span class="hljs-literal">False</span><br><span class="hljs-number">1</span><br><span class="hljs-string">crawl</span> <span class="hljs-string">task3</span> <span class="hljs-string">finished</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><p>使用 with 语句 ，通过 ThreadPoolExecutor 构造实例，同时传入 max_workers 参数来设置线程池中最多能同时运行的线程数目。</p>
+</li>
+<li><p>使用 submit 函数来提交线程需要执行的任务到线程池中，并返回该任务的句柄（类似于文件、画图），注意 submit() 不是阻塞的，而是立即返回。</p>
+</li>
+<li><p>通过使用 done() 方法判断该任务是否结束。上面的例子可以看出，提交任务后立即判断任务状态，显示四个任务都未完成。在延时2.5后，task1 和 task2 执行完毕，task3 仍在执行中。</p>
+</li>
+<li><p>使用 result() 方法可以获取任务的返回值。</p>
+</li>
+</ol>
+<h3 id="✨-主要方法："><a href="#✨-主要方法：" class="headerlink" title="✨ 主要方法："></a>✨ 主要方法：</h3><h4 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">wait(fs, <span class="hljs-attribute">timeout</span>=None, <span class="hljs-attribute">return_when</span>=ALL_COMPLETED)<br></code></pre></td></tr></table></figure>
+
+<p>wait 接受三个参数： fs: 表示需要执行的序列 timeout: 等待的最大时间，如果超过这个时间即使线程未执行完成也将返回 return_when：表示wait返回结果的条件，默认为 ALL_COMPLETED 全部执行完成再返回</p>
+<p>还是用上面那个例子来熟悉用法 示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor, wait, FIRST_COMPLETED, ALL_COMPLETED<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">spider</span>(<span class="hljs-params">page</span>):<br>    time.sleep(page)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;crawl task<span class="hljs-subst">&#123;page&#125;</span> finished&quot;</span>)<br>    <span class="hljs-keyword">return</span> page<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>) <span class="hljs-keyword">as</span> t: <br>    all_task = [t.submit(spider, page) <span class="hljs-keyword">for</span> page <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>)]<br>    wait(all_task, return_when=FIRST_COMPLETED)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;finished&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(wait(all_task, timeout=<span class="hljs-number">2.5</span>))<br><br><span class="hljs-comment"># 运行结果</span><br>crawl task1 finished<br>finished<br>crawl task2 finished<br>crawl task3 finished<br>DoneAndNotDoneFutures(done=&#123;, , &#125;, not_done=&#123;&#125;)<br>crawl task4 finished<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>代码中返回的条件是：当完成第一个任务的时候，就停止等待，继续主线程任务</li>
+<li>由于设置了延时， 可以看到最后只有 task4 还在运行中</li>
+</ol>
+<h4 id="as-completed"><a href="#as-completed" class="headerlink" title="as_completed"></a>as_completed</h4><p>上面虽然提供了判断任务是否结束的方法，但是不能在主线程中一直判断啊。最好的方法是当某个任务结束了，就给主线程返回结果，而不是一直判断每个任务是否结束。</p>
+<p>ThreadPoolExecutorThreadPoolExecutor 中 的 as_completed() 就是这样一个方法，当子线程中的任务执行完后，直接用 result() 获取返回结果</p>
+<p>用法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># coding: utf-8</span><br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor, as_completed<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">spider</span>(<span class="hljs-params">page</span>):<br>    time.sleep(page)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;crawl task<span class="hljs-subst">&#123;page&#125;</span> finished&quot;</span>)<br>    <span class="hljs-keyword">return</span> page<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>) <span class="hljs-keyword">as</span> t:<br>        obj_list = []<br>        <span class="hljs-keyword">for</span> page <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>):<br>            obj = t.submit(spider, page)<br>            obj_list.append(obj)<br><br>        <span class="hljs-keyword">for</span> future <span class="hljs-keyword">in</span> as_completed(obj_list):<br>            data = future.result()<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;main: <span class="hljs-subst">&#123;data&#125;</span>&quot;</span>)<br><br><span class="hljs-comment"># 执行结果</span><br>crawl task1 finished<br>main: <span class="hljs-number">1</span><br>crawl task2 finished<br>main: <span class="hljs-number">2</span><br>crawl task3 finished<br>main: <span class="hljs-number">3</span><br>crawl task4 finished<br>main: <span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+
+<p>as_completed() 方法是一个生成器，在没有任务完成的时候，会一直阻塞，除非设置了 timeout。</p>
+<p>当有某个任务完成的时候，会 yield 这个任务，就能执行 for 循环下面的语句，然后继续阻塞住，循环到所有的任务结束。同时，先完成的任务会先返回给主线程。</p>
+<h4 id="map"><a href="#map" class="headerlink" title="map"></a>map</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">map</span><span class="hljs-params">(fn, *iterables, timeout=None)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>fn： 第一个参数 fn 是需要线程执行的函数； iterables：第二个参数接受一个可迭代对象； timeout： 第三个参数 timeout 跟 wait() 的 timeout 一样，但由于 map 是返回线程执行的结果，如果 timeout小于线程执行时间会抛异常 TimeoutError。</p>
+<p>用法如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">spider</span>(<span class="hljs-params">page</span>):<br>    time.sleep(page)<br>    <span class="hljs-keyword">return</span> page<br><br>start = time.time()<br>executor = ThreadPoolExecutor(max_workers=<span class="hljs-number">4</span>)<br><br>i = <span class="hljs-number">1</span><br><span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> executor.<span class="hljs-built_in">map</span>(spider, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>]):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;task&#123;&#125;:&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(i, result))<br>    i += <span class="hljs-number">1</span><br><br><span class="hljs-comment">#  运行结果</span><br>task1:<span class="hljs-number">2</span><br>task2:<span class="hljs-number">3</span><br>task3:<span class="hljs-number">1</span><br>task4:<span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+
+<p>使用 map 方法，无需提前使用 submit 方法，map 方法与 python 高阶函数 map 的含义相同，都是将序列中的每个元素都执行同一个函数。</p>
+<p>上面的代码对列表中的每个元素都执行 spider() 函数，并分配各线程池。</p>
+<p>可以看到执行结果与上面的 as_completed() 方法的结果不同，输出顺序和列表的顺序相同，就算 1s 的任务先执行完成，也会先打印前面提交的任务返回的结果。</p>
+<h3 id="✨-实战"><a href="#✨-实战" class="headerlink" title="✨ 实战"></a>✨ 实战</h3><p>以某网站为例，演示线程池和单线程两种方式爬取的差异</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># coding: utf-8</span><br><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor, as_completed<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">from</span> requests <span class="hljs-keyword">import</span> adapters<br><br><span class="hljs-keyword">from</span> proxy <span class="hljs-keyword">import</span> get_proxies<br><br>headers = &#123;<br>    <span class="hljs-string">&quot;Host&quot;</span>: <span class="hljs-string">&quot;splcgk.court.gov.cn&quot;</span>,<br>    <span class="hljs-string">&quot;Origin&quot;</span>: <span class="hljs-string">&quot;https://splcgk.court.gov.cn&quot;</span>,<br>    <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36&quot;</span>,<br>    <span class="hljs-string">&quot;Referer&quot;</span>: <span class="hljs-string">&quot;https://splcgk.court.gov.cn/gzfwww/ktgg&quot;</span>,<br>&#125;<br>url = <span class="hljs-string">&quot;https://splcgk.court.gov.cn/gzfwww/ktgglist?pageNo=1&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">spider</span>(<span class="hljs-params">page</span>):<br>    data = &#123;<br>        <span class="hljs-string">&quot;bt&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>        <span class="hljs-string">&quot;fydw&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>        <span class="hljs-string">&quot;pageNum&quot;</span>: page,<br>    &#125;<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        <span class="hljs-keyword">try</span>:<br>            response = requests.post(url, headers=headers, data=data, proxies=get_proxies())<br>            json_data = response.json()<br>        <span class="hljs-keyword">except</span> (json.JSONDecodeError, adapters.SSLError):<br>            <span class="hljs-keyword">continue</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> &#123;&#125;<br><br>    <span class="hljs-keyword">return</span> json_data<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=<span class="hljs-number">8</span>) <span class="hljs-keyword">as</span> t:<br>        obj_list = []<br>        begin = time.time()<br>        <span class="hljs-keyword">for</span> page <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">15</span>):<br>            obj = t.submit(spider, page)<br>            obj_list.append(obj)<br><br>        <span class="hljs-keyword">for</span> future <span class="hljs-keyword">in</span> as_completed(obj_list):<br>            data = future.result()<br>            <span class="hljs-built_in">print</span>(data)<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;*&#x27;</span> * <span class="hljs-number">50</span>)<br>        times = time.time() - begin<br>        <span class="hljs-built_in">print</span>(times)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<p>运行结果如下：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/6/6/16b2cf5c38d862ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" srcset="/img/loading.gif" lazyload alt="多线程"></p>
+<p><strong>可以看到，14 页只花了 2 秒钟就爬完了</strong></p>
+<p>下面我们可以使用单线程来爬取，代码基本和上面的一样，加个单线程函数 代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">single</span>():<br>    begin = time.time()<br>    <span class="hljs-keyword">for</span> page <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">15</span>):<br>        data = spider(page)<br>        <span class="hljs-built_in">print</span>(data)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;*&#x27;</span> * <span class="hljs-number">50</span>)<br><br>    times = time.time() - begin<br>    <span class="hljs-built_in">print</span>(times)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    single()<br></code></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/6/6/16b2cf5c38438238?imageslim" srcset="/img/loading.gif" lazyload alt="单线程"></p>
+<p><strong>可以看到，总共花了 19 秒。真是肉眼可见的差距啊！如果数据量大的话，运行时间差距会更大！</strong></p>
+<blockquote>
+<p>转自：<a target="_blank" rel="noopener" href="https://juejin.im/post/5cf913cfe51d45105d63a4d0">https://juejin.im/post/5cf913cfe51d45105d63a4d0</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Program/" class="category-chain-item">Program</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python线程池的创建和使用</div>
+      <div>https://ting2938.github.io/2020/05/19/Python线程池的创建和使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>叶挺</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/05/19/Matlab%E7%BB%98%E5%88%B6%E5%9B%BE%E7%BB%84/" title="Matlab绘制图组">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Matlab绘制图组</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"MfqMCE7bV2FERa8qRoCPLY2f-gzGzoHsz","appKey":"DtsHTEOjSeUmVFcPEUnoyEqR","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
