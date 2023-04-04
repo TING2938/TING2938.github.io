@@ -1,146 +1,281 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-default-color-scheme=auto>
+
 
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>
-    Gromacs-2020后处理分析程序编写教程 | 小礼札记
-  </title>
-  <meta name="description" content="TING2938的记事簿">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="keywords" content="
-  C++,Gromacs
-  ">
-  
+  <meta name="theme-color" content="#2f4154">
   <meta name="author" content="叶挺">
+  <meta name="keywords" content="TING2938">
+  
+    <meta name="description" content="Gromacs轨迹分析工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gromacs-2020后处理分析程序编写教程">
+<meta property="og:url" content="https://ting2938.github.io/2021/03/17/Gromacs-2020%E5%90%8E%E5%A4%84%E7%90%86%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F%E7%BC%96%E5%86%99%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="小礼札记">
+<meta property="og:description" content="Gromacs轨迹分析工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-17T01:26:17.000Z">
+<meta property="article:modified_time" content="2021-03-26T08:22:59.000Z">
+<meta property="article:author" content="叶挺">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Gromacs">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Gromacs-2020后处理分析程序编写教程 - 小礼札记</title>
 
-  <meta http-equiv="Cache-Control" content="no-transform"/>
-  <meta http-equiv="Cache-Control" content="no-siteapp">
-  <meta name="theme-color" content="#1e2327">
-  <link rel="apple-touch-icon" href="https://github.githubassets.com/apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://github.githubassets.com/apple-touch-icon-180x180.png">
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
-  <link rel="icon" type="image/x-icon" href="https://github.githubassets.com/favicon.ico">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ting2938.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":"a42297b398451c11cf9852c2dfa19253","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.25-csp/vue.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+
+  
 <meta name="generator" content="Hexo 5.4.2"></head>
 
-<body id="replica-app">
 
-<nav class="navbar-wrapper">
-  <div class="navbar">
-    <div class="container clearfix">
-      <a href="/" class="navbar-logo"><i class="fa fa-github"></i></a>
+<body>
+  
 
-      <div class="navbar-search float-left desktop-only">
-        <div class="navbar-search-form">
-          <label for="gsc-i-id1">This website</label>
-          <div id="google-search">
-            <gcse:search></gcse:search>
-          </div>
-        </div>
-      </div>
+  <header>
+    
 
-      <ul class="navbar-nav float-left">
-        
-        <li><a href="/">Archives</a></li>
-        
-        
-        <li><a href="/">Categories</a></li>
-        
-        
-        <li><a href="/">Tags</a></li>
-        
-        
-        <li class="desktop-only"><a href="/atom.xml" target="_blank">RSS</a></li>
-        
-      </ul>
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>挺的记事簿</strong>
+    </a>
 
-      <ul class="navbar-nav user-nav float-right desktop-only">
-        <li class="user-nav-notification">
-          <a><span class="user-nav-unread"></span><i class="fa fa-bell"></i></a>
-        </li>
-        <li>
-          <a><i class="fa fa-plus"></i> <i class="fa fa-caret-down"></i></a>
-        </li>
-        <li class="user-nav-logo">
-          <a><img src="https://octodex.github.com/images/baracktocat.jpg"> <i class="fa fa-caret-down"></i></i></a>
-        </li>
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
       </ul>
     </div>
   </div>
 </nav>
 
-<div class="main-container">
-  <header class="header-wrapper desktop-only">
-  <div class="container header-site-detail">
-    <ul class="header-toolbar">
-      <li class="clearfix">
-        <a href="/" class="header-toolbar-left"><i
-                  class="fa fa-file-text"></i> Posts </a>
-        <a href="/"
-           class="header-toolbar-right"> 18 </a>
-      </li>
-      <li>
-        <a href="/" class="header-toolbar-left"><i
-                  class="fa fa-tags"></i> Tags </a>
-        <a href="/"
-           class="header-toolbar-right"> 14 </a>
-      </li>
-      <li>
-        <a href="/" class="header-toolbar-left"><i
-                  class="fa fa-folder-open"></i> Categories </a>
-        <a href="/"
-           class="header-toolbar-right"> 5 </a>
-      </li>
-    </ul>
-    <h2 class="header-title">
-      <i class="fa fa-book text-muted"></i>
-      <a href="/">小礼札记</a>
-      
-      
-    </h2>
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Gromacs-2020后处理分析程序编写教程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-03-17 09:26" pubdate>
+          2021年3月17日 上午
+        </time>
+      </span>
+    
   </div>
 
-  <div class="container">
-    <div class="header-tab-wrapper clearfix">
-      <span class="header-tab header-tab-selected"><i class="fa fa-thumbs-o-up"></i> Like</span>
-      <span class="header-tab"><i class="fa fa-share-alt"></i> Share</span>
-      <span class="header-tab"><i class="fa fa-comments-o"></i> Discussion</span>
-      <span class="header-tab"><i class="fa fa-bookmark-o"></i> Bookmark </span>
-      <span class="header-tab"><i class="fa fa-smile-o"></i> Smile <i class="fa fa-caret-down"></i></span>
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
     </div>
   </div>
-</header>
+</div>
 
+</div>
 
-<div class="post-container container">
-  <h3>
-    <i class="fa fa-user-o"></i>
-    叶挺
+  </header>
 
-    <span class="post-date float-right" title="{{moment(1615944377000).format('MMM DD, YYYY, h:mm:ss A')}}">
+  <main>
+    
       
-          <i class="fa fa-pencil-square-o"></i>
-      
-      {{moment(1615944377000).fromNow()}}
-    </span>
-  </h3>
 
-  <article class="post-content">
-    <h1>Gromacs-2020后处理分析程序编写教程</h1>
-    <h2 id="起"><a href="#起" class="headerlink" title="起"></a>起</h2><p><a target="_blank" rel="noopener" href="http://www.gromacs.org/">Gromacs</a>是一款十分优秀的分子动力学软件，其并行化运行速度快，且本身自带丰富的后处理命令。但在科研过程中难免会出现自带分析工具难以满足我们需求的情况，这时候就需要我们自己针对Gromacs产生的轨迹文件编写符合我们需求的后处理程序。本文介绍了针对Gromacs-2020系列版本的轨迹后处理分析过程，程序编写基于本人在研究生期间开发的后处理框架，开发平台为Windows 10-Visual Studio Community 2019，在Windows上编写代码就可以在Windows上编译运行，也可以把代码Copy到Linux服务器上编译运行。</p>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Gromacs-2020后处理分析程序编写教程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="起"><a href="#起" class="headerlink" title="起"></a>起</h2><p><a target="_blank" rel="noopener" href="http://www.gromacs.org/">Gromacs</a>是一款十分优秀的分子动力学软件，其并行化运行速度快，且本身自带丰富的后处理命令。但在科研过程中难免会出现自带分析工具难以满足我们需求的情况，这时候就需要我们自己针对Gromacs产生的轨迹文件编写符合我们需求的后处理程序。本文介绍了针对Gromacs-2020系列版本的轨迹后处理分析过程，程序编写基于本人在研究生期间开发的后处理框架，开发平台为Windows 10-Visual Studio Community 2019，在Windows上编写代码就可以在Windows上编译运行，也可以把代码Copy到Linux服务器上编译运行。</p>
 <h3 id="准备文件和工具"><a href="#准备文件和工具" class="headerlink" title="准备文件和工具"></a>准备文件和工具</h3><ol>
 <li><p>Gmx2020后处理框架</p>
  <iframe src="https://onedrive.live.com/embed?cid=7E39B63375DD2896&resid=7E39B63375DD2896%2110282&authkey=ADQyMIEb66TTm5k" width="98" height="120" frameborder="0" scrolling="no"></iframe>
@@ -151,7 +286,7 @@
 </ol>
 <p>准备完成后，解压缩后处理框架，进入<code>Gmx2020_PostAnalysis_for_VS2019/Gmx2020PostAnalysis/</code>目录中，双击<code>Gmx2020PostAnalysis.sln</code>即可打开VS2019工程。</p>
 <h2 id="承"><a href="#承" class="headerlink" title="承"></a>承</h2><h3 id="简单程序代码示例"><a href="#简单程序代码示例" class="headerlink" title="简单程序代码示例"></a>简单程序代码示例</h3><p>后处理程序由一个简单的示例引入：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">///&lt;讲注：开头注释，记录程序作者、时间、邮箱以及描述</span></span><br><span class="line"><span class="comment">/*  Author     : TING</span></span><br><span class="line"><span class="comment"> *  Date       : 2019/05/05</span></span><br><span class="line"><span class="comment"> *  Email      : yeting2938@hust.edu.cn</span></span><br><span class="line"><span class="comment"> *  Desc       : calculate density along axis in simulation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">///&lt;讲注：头文件，包含常用库和函数</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;itp/gmx&gt;</span></span></span><br><span class="line"><span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">///&lt;讲注：位于命名空间`itp`下的类`GmxHandle`里面定义了绝大多数在轨迹分析过程中</span></span><br><span class="line"><span class="comment">/// 会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量</span></span><br><span class="line"><span class="comment">/// 等数据结构，获取分子位置、速度、受力等函数，会在下节详细讲解。这里是构造一个</span></span><br><span class="line"><span class="comment">/// 继承类，里面可以定义一些在本代码中会用到的数据以及函数。</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Handle</span> : <span class="keyword">public</span> itp::GmxHandle</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="keyword">using</span> GmxHandle::GmxHandle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	itp::boxd pos1;</span><br><span class="line">	itp::matd posc1;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">///&lt;讲注：`gmx_main`是一个宏，其参数`temp`是一个函数名称，可以把`gmx_main`</span></span><br><span class="line"><span class="comment">/// 当作`main`函数。</span></span><br><span class="line"><span class="built_in">gmx_main</span>(temp)</span><br><span class="line"><span class="comment">///&gt;</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">///&lt;讲注：实例化一个`Handle`对象，其参数`argc`与`argv`定义在宏`gmx_main`里面</span></span><br><span class="line">	<span class="function">Handle <span class="title">hd</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：该后处理框架对体系的分析基于`Gromacs`中组(Group)的概念，即仅对用户</span></span><br><span class="line">	<span class="comment">/// 选择的组进行分析，选择的组里面包含了该组中所有原子的序号。这里可以定义该程</span></span><br><span class="line">	<span class="comment">/// 序所需组的个数，然后为每一个组定义一个变量方便后面代码操作。</span></span><br><span class="line">	hd.ngrps = <span class="number">1</span>; <span class="comment">// number of group(s);</span></span><br><span class="line">	<span class="type">int</span> grp = <span class="number">0</span>;  <span class="comment">// selected group;</span></span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：在这里定义由命令行输入的参数，采用`Gromacs`自带参数解析系统，支持的变量类型有：</span></span><br><span class="line">	<span class="comment">///      `int, int64, real, time, str, bool, rvec, enum` </span></span><br><span class="line">	<span class="comment">///      详情可在`Gromacs`源代码文件`include/gromacs/commandline/pargs.h`中查看</span></span><br><span class="line">	<span class="comment">///      注意：浮点数要用`real`类型，不能直接用`double`类型</span></span><br><span class="line">	<span class="comment">/* add some user-defined pargs. here */</span></span><br><span class="line">	<span class="type">int</span> nbin = <span class="number">100</span>;</span><br><span class="line">	<span class="type">int</span> dim = <span class="number">2</span>;     <span class="comment">// 0(x), 1(y), 2(z);</span></span><br><span class="line">	real lowPos = <span class="number">0</span>; <span class="comment">// nm;</span></span><br><span class="line">	real upPos = <span class="number">30</span>; <span class="comment">// nm;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/// 在这里编写命令行参数接口</span></span><br><span class="line">	hd.pa = &#123;</span><br><span class="line">		&#123; <span class="string">&quot;-nbin&quot;</span>, FALSE, etINT,  &#123;&amp;nbin&#125;, <span class="string">&quot;nbins.&quot;</span>&#125;,</span><br><span class="line">		&#123; <span class="string">&quot;-dim&quot;</span>, FALSE, etINT, &#123;&amp;dim&#125;, <span class="string">&quot;dim, 0(x), 1(y), 2(z)&quot;</span>&#125;,</span><br><span class="line">		&#123; <span class="string">&quot;-up&quot;</span>, FALSE, etREAL, &#123;&amp;upPos&#125;, <span class="string">&quot;up position of region of molecule/ion (nm)&quot;</span> &#125;,</span><br><span class="line">		&#123; <span class="string">&quot;-low&quot;</span>, FALSE, etREAL, &#123;&amp;lowPos&#125;, <span class="string">&quot;low position of region of molecule/ion (nm)&quot;</span> &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/// 在这里定义后处理过程中涉及到的输入/输出文件名称</span></span><br><span class="line">	hd.fnm = &#123;</span><br><span class="line">		&#123; efXVG, <span class="string">&quot;-o&quot;</span>, <span class="string">&quot;analysisOutput&quot;</span>, ffWRITE &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：初始化，在这个函数内会处理命令行选项，选择分析组，分析拓扑信息，并</span></span><br><span class="line">	<span class="comment">/// 计算组内原子的电荷量与质量。</span></span><br><span class="line">	<span class="comment">/// 注：该函数有一个可选参数，默认为`true`，代表选择的组内具有同种分子，否则</span></span><br><span class="line">	<span class="comment">/// 为`false`。</span></span><br><span class="line">	hd.<span class="built_in">init</span>();</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：读取第一帧轨迹数据。数据更新在`hd.fr`内。</span></span><br><span class="line">	hd.<span class="built_in">readFirstFrame</span>();</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：`hd.initPos(grp)`与`hd.initPosc(grp)`两个函数初始化两个矩阵类</span></span><br><span class="line">	<span class="comment">/// 型数据结构，分别储存分子中原子轨迹信息与分子中心轨迹信息。函数的参数为选</span></span><br><span class="line">	<span class="comment">/// 择组的组号。</span></span><br><span class="line">	<span class="comment">/// `hd.initPos(grp)`返回的数据大小为: [分子个数]x[每个分子中原子个数]x[3]</span></span><br><span class="line">	<span class="comment">/// `hd.initPosc(grp)`返回的数据大小为: [分子个数]x[3]</span></span><br><span class="line">	hd.pos1 = hd.<span class="built_in">initPos</span>(grp);</span><br><span class="line">	hd.posc1 = hd.<span class="built_in">initPosc</span>(grp);</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">///&lt;讲注：`itp::vecd`为一种数组类型，数组中每个元素类型为`double`，数组</span></span><br><span class="line">	<span class="comment">/// 长度为`nbin`。函数`fill`指向数组中填充相同的数值。</span></span><br><span class="line">	<span class="comment">/// 相似的数据结构还有：</span></span><br><span class="line">	<span class="comment">/// `itp::veci`: `int`型数组</span></span><br><span class="line">	<span class="comment">/// `itp::vecd`: `double`型数组</span></span><br><span class="line">	<span class="comment">/// `itp::mati`: `int`型矩阵</span></span><br><span class="line">	<span class="comment">/// `itp::matd`: `double`型矩阵</span></span><br><span class="line">	<span class="comment">/// `itp::boxd`: `double`型三维矩阵</span></span><br><span class="line">	<span class="comment">/// 这些类型为C++开源矩阵库Eigen(https://eigen.tuxfamily.org)中类型的别名</span></span><br><span class="line">	<span class="function">itp::vecd <span class="title">density</span><span class="params">(nbin)</span></span>;</span><br><span class="line">	density.<span class="built_in">fill</span>(<span class="number">0</span>);</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="type">double</span> dbin = (upPos - lowPos) / nbin;</span><br><span class="line">	<span class="type">int</span> me = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* ------------- main loop for each frame ----------------- */</span></span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">///&lt;讲注：获取位置以及位置中心，并储存在相应的数据结构中，</span></span><br><span class="line">		<span class="comment">/// `loadPositionCenter`还有第三个可选参数，默认为0（代表取质量中心）</span></span><br><span class="line">		<span class="comment">/// 还有1（代表几何中心）和2（代表电荷中心）</span></span><br><span class="line">		hd.<span class="built_in">loadPosition</span>(hd.pos1, grp);</span><br><span class="line">		hd.<span class="built_in">loadPositionCenter</span>(hd.posc1, grp);</span><br><span class="line">		<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; hd.nmol[grp]; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (lowPos &lt;= hd.<span class="built_in">posc1</span>(i, dim) &amp;&amp; hd.<span class="built_in">posc1</span>(i, dim) &lt; upPos)</span><br><span class="line">			&#123;</span><br><span class="line">				me = (hd.<span class="built_in">posc1</span>(i, dim) - lowPos) / dbin;</span><br><span class="line">				density[me]++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">while</span> (hd.<span class="built_in">readNextFrame</span>());</span><br><span class="line">	<span class="comment">/* --------------- main loop end -------------------- */</span></span><br><span class="line"></span><br><span class="line">	density /= hd.nframe;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/* ------------- for output ---------------*/</span></span><br><span class="line">	<span class="comment">///&lt;讲注：打开一个文件，文件名由命令行参数&quot;-o&quot;决定</span></span><br><span class="line">	<span class="comment">/// `openWrite`函数还有第二个可选参数，默认为`true`，代表在文件开始处写入</span></span><br><span class="line">	<span class="comment">/// 文件生成的相关信息（如路径、创建时间、命令行参数等）</span></span><br><span class="line">	<span class="keyword">auto</span> ofile = hd.<span class="built_in">openWrite</span>(hd.<span class="built_in">get_opt2fn</span>(<span class="string">&quot;-o&quot;</span>));</span><br><span class="line">	<span class="comment">///&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nbin; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">///&lt;讲注：输出数据到文件。这里输出操作采用的是一个</span></span><br><span class="line">		<span class="comment">/// 开源库&#123;fmt&#125;(https://github.com/fmtlib/fmt)</span></span><br><span class="line">		fmt::<span class="built_in">print</span>(ofile, <span class="string">&quot;&#123;:8.5f&#125; &#123;10.5f&#125;\n&quot;</span>, lowPos + dbin / <span class="number">2</span> + dbin*i, density[i]);</span><br><span class="line">		<span class="comment">///&gt;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">fclose</span>(ofile);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">///&lt;讲注：开头注释，记录程序作者、时间、邮箱以及描述</span><br><span class="hljs-comment">/*  Author     : TING</span><br><span class="hljs-comment"> *  Date       : 2019/05/05</span><br><span class="hljs-comment"> *  Email      : yeting2938@hust.edu.cn</span><br><span class="hljs-comment"> *  Desc       : calculate density along axis in simulation.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：头文件，包含常用库和函数</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;itp/gmx&gt;</span></span><br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：位于命名空间`itp`下的类`GmxHandle`里面定义了绝大多数在轨迹分析过程中</span><br><span class="hljs-comment">/// 会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量</span><br><span class="hljs-comment">/// 等数据结构，获取分子位置、速度、受力等函数，会在下节详细讲解。这里是构造一个</span><br><span class="hljs-comment">/// 继承类，里面可以定义一些在本代码中会用到的数据以及函数。</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Handle</span> : <span class="hljs-keyword">public</span> itp::GmxHandle<br>&#123;<br><span class="hljs-keyword">public</span>:<br>	<span class="hljs-keyword">using</span> GmxHandle::GmxHandle;<br><br><span class="hljs-keyword">public</span>:<br>	itp::boxd pos1;<br>	itp::matd posc1;<br>&#125;;<br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：`gmx_main`是一个宏，其参数`temp`是一个函数名称，可以把`gmx_main`</span><br><span class="hljs-comment">/// 当作`main`函数。</span><br><span class="hljs-built_in">gmx_main</span>(temp)<br><span class="hljs-comment">///&gt;</span><br>&#123;<br>	<span class="hljs-comment">///&lt;讲注：实例化一个`Handle`对象，其参数`argc`与`argv`定义在宏`gmx_main`里面</span><br>	<span class="hljs-function">Handle <span class="hljs-title">hd</span><span class="hljs-params">(argc, argv)</span></span>;<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：该后处理框架对体系的分析基于`Gromacs`中组(Group)的概念，即仅对用户</span><br>	<span class="hljs-comment">/// 选择的组进行分析，选择的组里面包含了该组中所有原子的序号。这里可以定义该程</span><br>	<span class="hljs-comment">/// 序所需组的个数，然后为每一个组定义一个变量方便后面代码操作。</span><br>	hd.ngrps = <span class="hljs-number">1</span>; <span class="hljs-comment">// number of group(s);</span><br>	<span class="hljs-type">int</span> grp = <span class="hljs-number">0</span>;  <span class="hljs-comment">// selected group;</span><br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：在这里定义由命令行输入的参数，采用`Gromacs`自带参数解析系统，支持的变量类型有：</span><br>	<span class="hljs-comment">///      `int, int64, real, time, str, bool, rvec, enum` </span><br>	<span class="hljs-comment">///      详情可在`Gromacs`源代码文件`include/gromacs/commandline/pargs.h`中查看</span><br>	<span class="hljs-comment">///      注意：浮点数要用`real`类型，不能直接用`double`类型</span><br>	<span class="hljs-comment">/* add some user-defined pargs. here */</span><br>	<span class="hljs-type">int</span> nbin = <span class="hljs-number">100</span>;<br>	<span class="hljs-type">int</span> dim = <span class="hljs-number">2</span>;     <span class="hljs-comment">// 0(x), 1(y), 2(z);</span><br>	real lowPos = <span class="hljs-number">0</span>; <span class="hljs-comment">// nm;</span><br>	real upPos = <span class="hljs-number">30</span>; <span class="hljs-comment">// nm;</span><br><br>	<span class="hljs-comment">/// 在这里编写命令行参数接口</span><br>	hd.pa = &#123;<br>		&#123; <span class="hljs-string">&quot;-nbin&quot;</span>, FALSE, etINT,  &#123;&amp;nbin&#125;, <span class="hljs-string">&quot;nbins.&quot;</span>&#125;,<br>		&#123; <span class="hljs-string">&quot;-dim&quot;</span>, FALSE, etINT, &#123;&amp;dim&#125;, <span class="hljs-string">&quot;dim, 0(x), 1(y), 2(z)&quot;</span>&#125;,<br>		&#123; <span class="hljs-string">&quot;-up&quot;</span>, FALSE, etREAL, &#123;&amp;upPos&#125;, <span class="hljs-string">&quot;up position of region of molecule/ion (nm)&quot;</span> &#125;,<br>		&#123; <span class="hljs-string">&quot;-low&quot;</span>, FALSE, etREAL, &#123;&amp;lowPos&#125;, <span class="hljs-string">&quot;low position of region of molecule/ion (nm)&quot;</span> &#125;<br>	&#125;;<br>	<br>	<span class="hljs-comment">/// 在这里定义后处理过程中涉及到的输入/输出文件名称</span><br>	hd.fnm = &#123;<br>		&#123; efXVG, <span class="hljs-string">&quot;-o&quot;</span>, <span class="hljs-string">&quot;analysisOutput&quot;</span>, ffWRITE &#125;<br>	&#125;;<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：初始化，在这个函数内会处理命令行选项，选择分析组，分析拓扑信息，并</span><br>	<span class="hljs-comment">/// 计算组内原子的电荷量与质量。</span><br>	<span class="hljs-comment">/// 注：该函数有一个可选参数，默认为`true`，代表选择的组内具有同种分子，否则</span><br>	<span class="hljs-comment">/// 为`false`。</span><br>	hd.<span class="hljs-built_in">init</span>();<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：读取第一帧轨迹数据。数据更新在`hd.fr`内。</span><br>	hd.<span class="hljs-built_in">readFirstFrame</span>();<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：`hd.initPos(grp)`与`hd.initPosc(grp)`两个函数初始化两个矩阵类</span><br>	<span class="hljs-comment">/// 型数据结构，分别储存分子中原子轨迹信息与分子中心轨迹信息。函数的参数为选</span><br>	<span class="hljs-comment">/// 择组的组号。</span><br>	<span class="hljs-comment">/// `hd.initPos(grp)`返回的数据大小为: [分子个数]x[每个分子中原子个数]x[3]</span><br>	<span class="hljs-comment">/// `hd.initPosc(grp)`返回的数据大小为: [分子个数]x[3]</span><br>	hd.pos1 = hd.<span class="hljs-built_in">initPos</span>(grp);<br>	hd.posc1 = hd.<span class="hljs-built_in">initPosc</span>(grp);<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：`itp::vecd`为一种数组类型，数组中每个元素类型为`double`，数组</span><br>	<span class="hljs-comment">/// 长度为`nbin`。函数`fill`指向数组中填充相同的数值。</span><br>	<span class="hljs-comment">/// 相似的数据结构还有：</span><br>	<span class="hljs-comment">/// `itp::veci`: `int`型数组</span><br>	<span class="hljs-comment">/// `itp::vecd`: `double`型数组</span><br>	<span class="hljs-comment">/// `itp::mati`: `int`型矩阵</span><br>	<span class="hljs-comment">/// `itp::matd`: `double`型矩阵</span><br>	<span class="hljs-comment">/// `itp::boxd`: `double`型三维矩阵</span><br>	<span class="hljs-comment">/// 这些类型为C++开源矩阵库Eigen(https://eigen.tuxfamily.org)中类型的别名</span><br>	<span class="hljs-function">itp::vecd <span class="hljs-title">density</span><span class="hljs-params">(nbin)</span></span>;<br>	density.<span class="hljs-built_in">fill</span>(<span class="hljs-number">0</span>);<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-type">double</span> dbin = (upPos - lowPos) / nbin;<br>	<span class="hljs-type">int</span> me = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-comment">/* ------------- main loop for each frame ----------------- */</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		<span class="hljs-comment">///&lt;讲注：获取位置以及位置中心，并储存在相应的数据结构中，</span><br>		<span class="hljs-comment">/// `loadPositionCenter`还有第三个可选参数，默认为0（代表取质量中心）</span><br>		<span class="hljs-comment">/// 还有1（代表几何中心）和2（代表电荷中心）</span><br>		hd.<span class="hljs-built_in">loadPosition</span>(hd.pos1, grp);<br>		hd.<span class="hljs-built_in">loadPositionCenter</span>(hd.posc1, grp);<br>		<span class="hljs-comment">///&gt;</span><br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; hd.nmol[grp]; i++)<br>		&#123;<br>			<span class="hljs-keyword">if</span> (lowPos &lt;= hd.<span class="hljs-built_in">posc1</span>(i, dim) &amp;&amp; hd.<span class="hljs-built_in">posc1</span>(i, dim) &lt; upPos)<br>			&#123;<br>				me = (hd.<span class="hljs-built_in">posc1</span>(i, dim) - lowPos) / dbin;<br>				density[me]++;<br>			&#125;<br>		&#125;<br>	&#125; <span class="hljs-keyword">while</span> (hd.<span class="hljs-built_in">readNextFrame</span>());<br>	<span class="hljs-comment">/* --------------- main loop end -------------------- */</span><br><br>	density /= hd.nframe;<br>	<br>	<span class="hljs-comment">/* ------------- for output ---------------*/</span><br>	<span class="hljs-comment">///&lt;讲注：打开一个文件，文件名由命令行参数&quot;-o&quot;决定</span><br>	<span class="hljs-comment">/// `openWrite`函数还有第二个可选参数，默认为`true`，代表在文件开始处写入</span><br>	<span class="hljs-comment">/// 文件生成的相关信息（如路径、创建时间、命令行参数等）</span><br>	<span class="hljs-keyword">auto</span> ofile = hd.<span class="hljs-built_in">openWrite</span>(hd.<span class="hljs-built_in">get_opt2fn</span>(<span class="hljs-string">&quot;-o&quot;</span>));<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nbin; i++)<br>	&#123;<br>		<span class="hljs-comment">///&lt;讲注：输出数据到文件。这里输出操作采用的是一个</span><br>		<span class="hljs-comment">/// 开源库&#123;fmt&#125;(https://github.com/fmtlib/fmt)</span><br>		fmt::<span class="hljs-built_in">print</span>(ofile, <span class="hljs-string">&quot;&#123;:8.5f&#125; &#123;10.5f&#125;\n&quot;</span>, lowPos + dbin / <span class="hljs-number">2</span> + dbin*i, density[i]);<br>		<span class="hljs-comment">///&gt;</span><br>	&#125;<br>	<span class="hljs-built_in">fclose</span>(ofile);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>以上程序统计指定范围内（<code>-low</code>与<code>-up</code>之间）、指定维度（<code>-dim</code>）分子的个数分布。</p>
 <h2 id="转"><a href="#转" class="headerlink" title="转"></a>转</h2><ul>
@@ -309,51 +444,415 @@
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://github.com/fmtlib/fmt">fmt</a></p>
 <p>  一个开源的C++输出格式控制库，用法类似<code>Python</code>的格式化字符串方式，如</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出到终端</span></span><br><span class="line">fmt::<span class="built_in">print</span>(<span class="string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line">fmt::<span class="built_in">print</span>(<span class="string">&quot;4.2 + 2.1 = &#123;:5.2f&#125;&quot;</span>, <span class="number">6.3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出到文件</span></span><br><span class="line"><span class="function">FILE* <span class="title">ofile</span><span class="params">(<span class="string">&quot;output.dat&quot;</span>, <span class="string">&quot;w&quot;</span>)</span></span>;</span><br><span class="line">fmt::<span class="built_in">print</span>(ofile, <span class="string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line"><span class="function">std::ofstream <span class="title">ofsfile</span><span class="params">(<span class="string">&quot;output.dat&quot;</span>)</span></span>;</span><br><span class="line">fmt::<span class="built_in">print</span>(ofsfile, <span class="string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="string">&quot;world&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 输出到终端</span><br>fmt::<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="hljs-string">&quot;world&quot;</span>);<br>fmt::<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;4.2 + 2.1 = &#123;:5.2f&#125;&quot;</span>, <span class="hljs-number">6.3</span>);<br><br><span class="hljs-comment">// 输出到文件</span><br><span class="hljs-function">FILE* <span class="hljs-title">ofile</span><span class="hljs-params">(<span class="hljs-string">&quot;output.dat&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>)</span></span>;<br>fmt::<span class="hljs-built_in">print</span>(ofile, <span class="hljs-string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="hljs-string">&quot;world&quot;</span>);<br><span class="hljs-function">std::ofstream <span class="hljs-title">ofsfile</span><span class="hljs-params">(<span class="hljs-string">&quot;output.dat&quot;</span>)</span></span>;<br>fmt::<span class="hljs-built_in">print</span>(ofsfile, <span class="hljs-string">&quot;Hello &#123;&#125;!\n&quot;</span>, <span class="hljs-string">&quot;world&quot;</span>);<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
 <h2 id="合"><a href="#合" class="headerlink" title="合"></a>合</h2><p>运用本框架进行Gromacs后处理分析过程中遇到问题可以联系我</p>
 <blockquote>
 <p>Name : 叶挺</p>
-<p>Email: <a href="mailto:&#x79;&#101;&#x74;&#105;&#110;&#x67;&#x32;&#x39;&#x33;&#x38;&#x40;&#x68;&#x75;&#x73;&#x74;&#46;&#x65;&#100;&#117;&#46;&#x63;&#110;">&#x79;&#101;&#x74;&#105;&#110;&#x67;&#x32;&#x39;&#x33;&#x38;&#x40;&#x68;&#x75;&#x73;&#x74;&#46;&#x65;&#100;&#117;&#46;&#x63;&#110;</a></p>
+<p>Email: <a href="mailto:&#x79;&#101;&#116;&#105;&#x6e;&#x67;&#50;&#x39;&#x33;&#x38;&#64;&#104;&#117;&#x73;&#116;&#46;&#101;&#100;&#x75;&#x2e;&#x63;&#110;">&#x79;&#101;&#116;&#105;&#x6e;&#x67;&#50;&#x39;&#x33;&#x38;&#64;&#104;&#117;&#x73;&#116;&#46;&#101;&#100;&#x75;&#x2e;&#x63;&#110;</a></p>
 </blockquote>
 
-  </article>
-</div>
-
-
-    
-
-
-
-
-</div>
-
-<div class="footer-wrapper container">
-  <footer class="footer clearfix">
-    <div class="clearfix">
-    <a href="https://ting2938.github.io" class="footer-logo">
-      <i class="fa fa-github"></i>
-    </a>
-    <ul class="footer-social-link">
-      <li>© 2019 叶挺</li>
-      <li><a href="https://ting2938.github.io">Home</a></li>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
       
-    </ul>
-    <div class="footer-theme-info">
-      Theme <a target="_blank" rel="noopener" href="//github.com/sabrinaluo/hexo-theme-replica">Replica</a>
-      by <a target="_blank" rel="noopener" href="//github.com/sabrinaluo">Hiitea</a> ❤ Powered by Hexo
-    </div>
-    </div>
+
+<span class="category-chains">
+  
+  
     
-  </footer>
+      <span class="category-chain">
+        
+  <a href="/categories/Research/" class="category-chain-item">Research</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/C/">#C++</a>
+      
+        <a href="/tags/Gromacs/">#Gromacs</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Gromacs-2020后处理分析程序编写教程</div>
+      <div>https://ting2938.github.io/2021/03/17/Gromacs-2020后处理分析程序编写教程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>叶挺</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年3月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/03/hexo%E9%85%8D%E5%90%88vscode%E7%9A%84%E4%BD%BF%E7%94%A8/" title="hexo配合vscode的使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hexo配合vscode的使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/" title="Linux常用命令（持续更新中...）">
+                        <span class="hidden-mobile">Linux常用命令（持续更新中...）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"MfqMCE7bV2FERa8qRoCPLY2f-gzGzoHsz","appKey":"DtsHTEOjSeUmVFcPEUnoyEqR","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
 </div>
 
 
 
 
-<script src="/js/main.js"></script>
 
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
